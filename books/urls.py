@@ -8,4 +8,6 @@ urlpatterns = [
     path('books/<int:pk>/update', views.BookUpdateAPIView.as_view()),
     path('books/<int:pk>/delete', views.BookDeleteAPIView.as_view()),
     path('books/create', views.BookCreateAPIView.as_view()),
+    path('booklistcreate', views.BookListCreateAPIView.as_view()),
+    path('bookupdatedelete/<int:pk>', views.BookUpdateDeleteAPIView.as_view()),
 ]
