@@ -4,7 +4,8 @@ from rest_framework.views import APIView
 
 from .models import Book
 from .serializers import BookSerializer
-from rest_framework import generics
+from rest_framework import generics, status
+
 
 # class BookListAPIView(generics.ListAPIView):
 #     queryset = Book.objects.all()
@@ -34,9 +35,23 @@ class BookUpdateAPIView(generics.UpdateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
-class BookCreateAPIView(generics.CreateAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
+# class BookCreateAPIView(generics.CreateAPIView):
+#     queryset = Book.objects.all()
+#     serializer_class = BookSerializer
+
+class BookCreateAPIView(APIView):
+    def post(self, request):
+        data = request.data
+        serializer = BookSerializer(data=data)
+        if serializer.is_valid():
+            books = serializer.save()
+            data = {
+                'status': f'Book created successfully',
+                'books': books
+            }
+            return Response(data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class BookListCreateAPIView(generics.ListCreateAPIView):
     queryset = Book.objects.all()
