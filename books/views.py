@@ -40,7 +40,7 @@ class BookDetailAPIView(APIView):
                 'books': serializer
             }
 
-            return Response(data)
+            return Response(data, status=status.HTTP_200_OK)
         except Exception:
             return Response({
                 'status': 'Book not found',
