@@ -1,4 +1,5 @@
 from rest_framework.decorators import api_view
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -69,9 +70,40 @@ class BookDeleteAPIView(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
 
-class BookUpdateAPIView(generics.UpdateAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
+# class BookUpdateAPIView(generics.UpdateAPIView):
+#     queryset = Book.objects.all()
+#     serializer_class = BookSerializer
+
+
+class BookUpdateAPIView(APIView):
+    def put(self, request, pk):
+        book = get_object_or_404(Book.objects.all(), pk=pk)
+        serializer = BookSerializer(instance=book, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+
+        return Response({
+            'status': True,
+            'message': 'Book updated'
+        }, status=status.HTTP_200_OK)
+
+
+    def patch(self, request, pk):
+        try:
+            book = Book.objects.get(pk=pk)
+            serializer = BookSerializer(book, request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({
+                    'status': True,
+                    'message': 'Book updated'
+                }, status=status.HTTP_200_OK)
+        except Exception:
+            return Response({
+                'status': False,
+                'message': 'Book not found'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
 
 # class BookCreateAPIView(generics.CreateAPIView):
 #     queryset = Book.objects.all()
