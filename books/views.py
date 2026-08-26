@@ -44,10 +44,10 @@ class BookCreateAPIView(APIView):
         data = request.data
         serializer = BookSerializer(data=data)
         if serializer.is_valid():
-            books = serializer.save()
+            serializer.save()
             data = {
                 'status': f'Book created successfully',
-                'books': books
+                'books': data
             }
             return Response(data)
         else:
