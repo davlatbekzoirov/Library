@@ -23,9 +23,30 @@ class BookListAPIView(APIView):
 
         return Response(data)
 
-class BookDetailAPIView(generics.RetrieveAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
+# class BookDetailAPIView(generics.RetrieveAPIView):
+#     queryset = Book.objects.all()
+#     serializer_class = BookSerializer
+
+
+
+class BookDetailAPIView(APIView):
+    def get(self, request, pk):
+        try:
+            book = Book.objects.get(pk=pk)
+            serializer = BookSerializer(book).data
+
+            data = {
+                'status': f'Successfull',
+                'books': serializer
+            }
+
+            return Response(data)
+        except Exception:
+            return Response({
+                'status': 'Book not found',
+                'message': 'Book not found'
+            }, status=status.HTTP_404_NOT_FOUND)
+
 
 class BookDeleteAPIView(generics.DestroyAPIView):
     queryset = Book.objects.all()
