@@ -25,3 +25,10 @@ class BookSerializer(serializers.ModelSerializer):
             })
 
         return data
+
+    def validate_price(self, attrs):
+        if attrs<=0 or attrs>=999999:
+            raise ValidationError({
+                'status': False,
+                'message': 'Price must be between 0 and 999999.',
+            })
