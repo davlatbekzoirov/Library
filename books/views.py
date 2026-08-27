@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 
 from .models import Book
 from .serializers import BookSerializer
-from rest_framework import generics, status
+from rest_framework import generics, status, viewsets
 
 
 # class BookListAPIView(generics.ListAPIView):
@@ -130,6 +130,12 @@ class BookListCreateAPIView(generics.ListCreateAPIView):
 class BookUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+
+
+class BookViewSet(viewsets.ModelViewSet):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+
 
 @api_view(['GET'])
 def book_list_view(request, *args, **kwargs):
